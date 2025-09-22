@@ -10,15 +10,18 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
-
-Route::Resource('students', StudentController::class);
-Route::Resource('teachers', TeacherController::class);
-Route::Resource('courses', CourseController::class);
-Route::Resource('batch', BatchController::class);
-Route::Resource('enrollments', EnrollmentController::class);
-Route::Resource('payments', PaymentController::class);
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::Get('payments/{payment}/receipt', [PaymentController::class, 'downloadreceipt'])->name('payments.receipt');
+
+Route::resource('students', StudentController::class);
+Route::resource('teachers', TeacherController::class);
+Route::resource('courses', CourseController::class);
+Route::resource('batch', BatchController::class);
+Route::resource('enrollments', EnrollmentController::class);
+Route::resource('payments', PaymentController::class);
+// Preview receipt in browser
+Route::get('/payments/{id}/receipt/preview', [App\Http\Controllers\PaymentController::class, 'previewReceipt'])
+    ->name('payments.receipt.preview');
+
+// Download receipt as PDF
+Route::get('/payments/{id}/receipt/download', [App\Http\Controllers\PaymentController::class, 'downloadReceipt'])
+    ->name('payments.receipt.download');

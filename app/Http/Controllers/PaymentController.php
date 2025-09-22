@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
-use Barrycdh\DomPDF\Facade\pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Models\Student;
 
 class PaymentController extends Controller
@@ -13,7 +14,10 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Payment::with(['enrollment.student', 'enrollment.batch.course'])->get();
-        return view('payments.index', compact('payments'));
+
+        // provide enrollments for the edit row select
+        $enrollments = Enrollment::with(['student','batch.course'])->get();
+        return view('payments.index', compact('payments', 'enrollments'));
     }
 
     // creating a new payment
@@ -46,10 +50,24 @@ class PaymentController extends Controller
         return view('payments.show', compact('payment'));
     }
 
-    public function DownloadReceipt(payment $payment)
+
+    public function previewReceipt($id)
     {
-        $payment->load('enrollment.student', 'enrollment.batch.course');
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadview('payments.receipt', compact('payment'));
+        $payment = Payment::with('enrollment.student', 'enrollment.batch')->findOrFail($id);
+
+        $pdf = Pdf::loadView('payments.receipt', compact('payment'));
+
+        // Opens inside browser (inline mode)
+        return $pdf->stream('receipt_'.$payment->receipt_no.'.pdf');
+    }
+
+    public function downloadReceipt($id)
+    {
+        $payment = Payment::with('enrollment.student', 'enrollment.batch')->findOrFail($id);
+
+        $pdf = Pdf::loadView('payments.receipt', compact('payment'));
+
+        // Forces download
         return $pdf->download('receipt_'.$payment->receipt_no.'.pdf');
     }
 

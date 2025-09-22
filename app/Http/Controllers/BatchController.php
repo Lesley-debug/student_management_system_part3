@@ -11,7 +11,9 @@ class BatchController extends Controller
     public function index()
     {
         $batches = Batch::with('course')->get();
-        return view('batch.index', compact('batches'));
+
+        $courses = Course::all();
+        return view('batch.index', compact('batches', 'courses'));
     }
 
     public function create()

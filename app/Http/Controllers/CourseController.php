@@ -33,7 +33,7 @@ class CourseController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'syllabus' => 'required|string',
-            'duration' => 'required|string|unique:courses',
+            'duration' => 'required|string',
         ]);
 
         Course::create($validated);
@@ -66,7 +66,7 @@ class CourseController extends Controller
          $validated = $request->validate([
             'name' => 'required|string|max:255',
             'syllabus' => 'required|string',
-            'duration' => 'required|string |unique:courses','duration'. $id
+            'duration' => 'required|string',
         ]);
 
         $course = course::findOrFail($id);

@@ -12,7 +12,12 @@ class EnrollmentController extends Controller
     public function index()
     {
         $enrollments = Enrollment::with(['student', 'batch'])->get();
-        return view('enrollments.index', compact('enrollments'));
+
+        // needed for inline edit selects
+        $students = Student::all();
+        $batches  = Batch::all();
+
+        return view('enrollments.index', compact('enrollments', 'students', 'batches'));
     }
 
     /*

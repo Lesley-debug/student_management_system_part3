@@ -1,68 +1,135 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h1 class="mb-4">📊 Dashboard</h1>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            overflow: hidden;
+        }
+        .sidebar {
+            height: 100vh;
+            background: #343a40;
+            color: white;
+        }
+        .sidebar h4 {
+            padding: 15px;
+            border-bottom: 1px solid #495057;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+        }
+        .sidebar a:hover {
+            background: #495057;
+        }
+        .content {
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h4>{{ $studentsCount }}</h4>
-                    <p>Students</p>
-                    <a href="{{ route('students.index') }}" class="btn btn-sm btn-primary">Manage</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h4>{{ $teachersCount }}</h4>
-                    <p>Teachers</p>
-                    <a href="{{ route('teachers.index') }}" class="btn btn-sm btn-primary">Manage</a>
-                </div>
-            </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar p-0">
+            <h4>📊 Dashboard</h4>
+            <a href="{{ route('dashboard') }}">🏠 Home</a>
+            <a href="{{ route('students.index') }}">👨‍🎓 Students</a>
+            <a href="{{ route('teachers.index') }}">👩‍🏫 Teachers</a>
+            <a href="{{ route('courses.index') }}">📘 Courses</a>
+            <a href="{{ route('batch.index') }}">📅 Batches</a>
+            <a href="{{ route('enrollments.index') }}">📝 Enrollments</a>
+            <a href="{{ route('payments.index') }}">💵 Payments</a>
         </div>
 
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h4>{{ $coursesCount }}</h4>
-                    <p>Courses</p>
-                    <a href="{{ route('courses.index') }}" class="btn btn-sm btn-primary">Manage</a>
-                </div>
-            </div>
-        </div>
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 content">
+            <h2 class="mb-4">School Management Dashboard</h2>
 
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h4>{{ $batchesCount }}</h4>
-                    <p>Batches</p>
-                    <a href="{{ route('batch.index') }}" class="btn btn-sm btn-primary">Manage</a>
+            <div class="row">
+                <!-- Students -->
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow text-center p-3">
+                        <h5>👨‍🎓 Students</h5>
+                        <h2 class="counter" data-target="{{ $studentsCount }}">0</h2>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h4>{{ $enrollmentsCount }}</h4>
-                    <p>Enrollments</p>
-                    <a href="{{ route('enrollments.index') }}" class="btn btn-sm btn-primary">Manage</a>
+                <!-- Teachers -->
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow text-center p-3">
+                        <h5>👩‍🏫 Teachers</h5>
+                        <h2 class="counter" data-target="{{ $teachersCount }}">0</h2>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-md-3 mt-4">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h4>{{ $paymentsCount }}</h4>
-                    <p>Payments</p>
-                    <a href="{{ route('payments.index') }}" class="btn btn-sm btn-primary">Manage</a>
+                <!-- Courses -->
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow text-center p-3">
+                        <h5>📘 Courses</h5>
+                        <h2 class="counter" data-target="{{ $coursesCount }}">0</h2>
+                    </div>
+                </div>
+
+                <!-- Batches -->
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow text-center p-3">
+                        <h5>📅 Batches</h5>
+                        <h2 class="counter" data-target="{{ $batchesCount }}">0</h2>
+                    </div>
+                </div>
+
+                <!-- Enrollments -->
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow text-center p-3">
+                        <h5>📝 Enrollments</h5>
+                        <h2 class="counter" data-target="{{ $enrollmentsCount }}">0</h2>
+                    </div>
+                </div>
+
+                <!-- Payments -->
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow text-center p-3">
+                        <h5>💵 Payments</h5>
+                        <h2 class="counter" data-target="{{ $paymentsCount }}">0</h2>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
+
+<!-- Counter Animation Script -->
+<script>
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const increment = target / 200; // adjust speed
+            if(count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(updateCount, 10);
+            } else {
+                counter.innerText = target;
+            }
+        }
+        updateCount();
+    });
+</script>
+</body>
+</html>

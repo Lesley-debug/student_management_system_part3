@@ -6,7 +6,7 @@
     <title>receipt</title>
 </head>
 <body>
-    <h2>Payment Receipt</h2>
+    <h2>Student Management System Payment Receipt</h2>
     <p><strong>Receipt No:</strong> {{$payment->receipt_no}}</p>
     <p><strong>Student name:</strong> {{$payment->enrollment->student->name}}</p>
     <p><strong>Course Name:</strong> {{$payment->enrollment->batch->course->name}}</p>

@@ -33,7 +33,7 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|string|unique:students',
+            'mobile' => 'required|string|unique:students,mobile',
             'address' => 'required|string',
         ]);
 
