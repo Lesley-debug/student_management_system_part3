@@ -28,20 +28,32 @@ class PaymentController extends Controller
     }
 
     //store  newly creatted payments in storage
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'enrollment_id' => 'required|exists:enrollments,id',
-            'receipt_no' => 'required|string|unique:payments,receipt_no',
-            'amount' => 'required|numeric',
-            'payment_date' => 'required|date',
-            'method' => 'nullable|string|max:50',
-        ]);
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'enrollment_id' => 'required|exists:enrollments,id',
+        'amount' => 'required|numeric|min:0',
+        'payment_date' => 'required|date',
+        'method' => 'nullable|string|max:50',
+    ]);
 
-        Payment::create($validated);
-        return redirect()->route('payments.index')->with('success', 'Payment created successsfully');
+    // ✅ Auto-generate receipt number (always new and unique)
+    $year = date('Y');
+    $lastPayment = Payment::whereYear('created_at', $year)->orderBy('id', 'desc')->first();
 
+    $nextNumber = 1;
+    if ($lastPayment && preg_match('/RCPT\d{4}-(\d+)/', $lastPayment->receipt_no, $matches)) {
+        $nextNumber = intval($matches[1]) + 1;
     }
+
+    $validated['receipt_no'] = 'RCPT' . $year . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+    Payment::create($validated);
+
+    return redirect()->route('payments.index')->with('success', 'Payment created successfully');
+}
+
+
 
     // display the payment
     public function show(Payment $payment)
@@ -79,20 +91,34 @@ class PaymentController extends Controller
     }
 
     //update the payment method
-    public function update(Request $request, Payment $payment)
-    {
-        $validated = $request->validate
-        ([
-            'enrollment_id' => 'required|exists:enrollments,id',
-            'receipt_no' => 'required|string|unique:payments,receipt_no,' . $payment->id,
-            'amount' => 'required|numeric',
-            'payment_date' => 'required|date',
-            'method' => 'nullable|string|max:50',
-        ]);
+public function update(Request $request, Payment $payment)
+{
+    $validated = $request->validate([
+        'enrollment_id' => 'required|exists:enrollments,id',
+        'amount' => 'required|numeric|min:0',
+        'payment_date' => 'required|date',
+        'method' => 'nullable|string|max:50',
+    ]);
 
-        $payment->update($validated);
-        return redirect()->route('payments.index')->with('success', 'updated successfully');
+    // ✅ Auto-generate a receipt number if missing
+    if (empty($payment->receipt_no)) {
+        $year = date('Y');
+        $lastPayment = Payment::whereYear('created_at', $year)->orderBy('id', 'desc')->first();
+
+        $nextNumber = 1;
+        if ($lastPayment && preg_match('/RCPT\d{4}-(\d+)/', $lastPayment->receipt_no, $matches)) {
+            $nextNumber = intval($matches[1]) + 1;
+        }
+
+        $validated['receipt_no'] = 'RCPT' . $year . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
+
+    $payment->update($validated);
+
+    return redirect()->route('payments.index')->with('success', 'Payment updated successfully');
+}
+
+
 
     public function destroy(Payment $payment)
     {

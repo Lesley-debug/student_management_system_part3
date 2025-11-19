@@ -2,19 +2,24 @@
 
 @section('content')
 <div class="container">
-    <h2>students</h2>
+    <h2>Students</h2>
 
     {{-- Success message --}}
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <!-- Add student Button -->
+    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary mb-3">
+        Back To Dashboard
+    </a>
+
+
+    <!-- Add Student Button -->
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createStudentModal">
-        Add student
+        Add Student
     </button>
 
-    <!-- students Table -->
+    <!-- Students Table -->
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -30,21 +35,17 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $student->name }}</td>
+                <td>{{ $student->email }}</td>
                 <td>{{ $student->mobile }}</td>
                 <td>{{ $student->address }}</td>
                 <td>
-
                     <!-- View Button -->
-                    <button class="btn btn-sm btn-warning"
-                     data-bs-toggle="modal" 
-                     data-bs-target="#viewStudentModal{{ $student->id }}">
+                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewStudentModal{{ $student->id }}">
                         View
                     </button>
 
                     <!-- Edit Button -->
-                    <button class="btn btn-sm btn-warning"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editStudentModal{{ $student->id }}">
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editStudentModal{{ $student->id }}">
                         Edit
                     </button>
 
@@ -52,10 +53,7 @@
                     <form action="{{ route('students.destroy', $student->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            onclick="return confirm('Are you sure you want to delete this student?')">
-                            Delete
-                        </button>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -65,19 +63,20 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">View student: {{ $student->name }}</h5>
+                            <h5 class="modal-title">View Student: {{ $student->name }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
                             <p><strong>ID:</strong> {{ $student->id }}</p>
                             <p><strong>Name:</strong> {{ $student->name }}</p>
+                            <p><strong>Email:</strong> {{ $student->email }}</p>
                             <p><strong>Mobile:</strong> {{ $student->mobile }}</p>
                             <p><strong>Address:</strong> {{ $student->address }}</p>
                             <p><strong>Created At:</strong> {{ $student->created_at->format('d M, Y') }}</p>
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
 
             <!-- Edit Modal -->
             <div class="modal fade" id="editStudentModal{{ $student->id }}" tabindex="-1" aria-hidden="true">
@@ -94,6 +93,14 @@
                                 <div class="mb-3">
                                     <label>Name</label>
                                     <input type="text" name="name" value="{{ $student->name }}" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Email</label>
+                                    <input type="email" name="email" value="{{ $student->email }}" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Password <small>(leave blank to keep current)</small></label>
+                                    <input type="password" name="password" class="form-control">
                                 </div>
                                 <div class="mb-3">
                                     <label>Mobile</label>
@@ -131,6 +138,14 @@
                     <div class="mb-3">
                         <label>Name</label>
                         <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label>Mobile</label>

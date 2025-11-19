@@ -27,4 +27,9 @@ class Batch extends Model
     {
         return $this->hasMany(Enrollment::class);
     }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
+    }
 }

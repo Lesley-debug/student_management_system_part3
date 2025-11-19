@@ -47,7 +47,7 @@
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 sidebar p-0">
             <h4>📊 Dashboard</h4>
-            <a href="{{ route('dashboard') }}">🏠 Home</a>
+            <a href="{{ route('home') }}">🏠 Home</a>
             <a href="{{ route('students.index') }}">👨‍🎓 Students</a>
             <a href="{{ route('teachers.index') }}">👩‍🏫 Teachers</a>
             <a href="{{ route('courses.index') }}">📘 Courses</a>

@@ -9,6 +9,11 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+
+    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary mb-3">
+        Back To Dashboard
+    </a>
+
     <!-- Add Batch Button -->
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createBatchModal">
         Add Batch

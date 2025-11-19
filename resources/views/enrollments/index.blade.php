@@ -9,6 +9,11 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary mb-3">
+        Back To Dashboard
+    </a>
+
+
     <!-- Add Enrollment Button -->
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createEnrollmentModal">
         Add Enrollment
@@ -85,6 +90,16 @@
             </div> 
 
             <!-- Edit Modal -->
+             @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="modal fade" id="editEnrollmentModal{{ $enrollment->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <form action="{{ route('enrollments.update', $enrollment->id) }}" method="POST">
@@ -124,6 +139,18 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label>Course</label>
+                                    <select name="course_id" class="form-control" required>
+                                        @foreach($courses as $course)
+                                            <option value="{{ $course->id }}" {{ $enrollment->course_id == $course->id ? 'selected' : '' }}>
+                                                {{ $course->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+                                <div class="mb-3">
                                     <label>Join Date</label>
                                     <input type="date" name="join_date" value="{{ $enrollment->join_date }}" class="form-control">
                                 </div>
@@ -156,15 +183,21 @@
                     <h5 class="modal-title">Add Enrollment</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
+                    {{-- Auto-generated Enrollment Number (Preview only) --}}
                     <div class="mb-3">
-                        <label>Enroll No</label>
-                        <input type="text" name="enroll_no" class="form-control" required>
+                        <label>Next Enroll No (Auto-generated)</label>
+                        <input type="text" class="form-control" value="{{ $nextEnrollNo ?? 'Auto-generated' }}" readonly>
                     </div>
+
+                    {{-- Hidden field (actual value sent to backend) --}}
+                    <input type="hidden" name="enroll_no" value="{{ $nextEnrollNo ?? '' }}">
 
                     <div class="mb-3">
                         <label>Student</label>
                         <select name="student_id" class="form-control" required>
+                            <option value="">-- Select Student --</option>
                             @foreach($students as $student)
                                 <option value="{{ $student->id }}">{{ $student->name }}</option>
                             @endforeach
@@ -172,8 +205,19 @@
                     </div>
 
                     <div class="mb-3">
+                        <label>Course</label>
+                        <select name="course_id" class="form-control" required>
+                            @foreach($courses as $course)
+                                <option value="{{ $course->id }}">{{ $course->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
+                    <div class="mb-3">
                         <label>Batch</label>
                         <select name="batch_id" class="form-control" required>
+                            <option value="">-- Select Batch --</option>
                             @foreach($batches as $batch)
                                 <option value="{{ $batch->id }}">{{ $batch->name }}</option>
                             @endforeach
@@ -182,14 +226,15 @@
 
                     <div class="mb-3">
                         <label>Join Date</label>
-                        <input type="date" name="join_date" class="form-control">
+                        <input type="date" name="join_date" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
                         <label>Fee</label>
-                        <input type="number" name="fee" class="form-control">
+                        <input type="number" name="fee" class="form-control" min="0" required>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -198,4 +243,5 @@
         </form>
     </div>
 </div>
+
 @endsection

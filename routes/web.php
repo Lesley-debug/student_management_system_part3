@@ -9,11 +9,13 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
+ use App\Http\Controllers\AdminController;
+ use App\Http\Controllers\StudentLoginController;
 
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
+    return view('home');
+})->name('home');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -30,3 +32,27 @@ Route::get('/payments/{id}/receipt/preview', [App\Http\Controllers\PaymentContro
 // Download receipt as PDF
 Route::get('/payments/{id}/receipt/download', [App\Http\Controllers\PaymentController::class, 'downloadReceipt'])
     ->name('payments.receipt.download');
+
+// Admin Login
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth:admin');
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+
+// Student Login
+Route::get('/student/login', [StudentLoginController::class, 'showLoginForm'])
+    ->name('student.login');
+Route::post('/student/login', [StudentLoginController::class, 'login'])
+    ->name('student.login.submit');
+
+// Student Dashboard (only for authenticated students)
+Route::middleware('auth:student')->group(function () {
+    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])
+        ->name('student.dashboard');
+
+    // Student Logout
+    Route::post('/student/logout', [StudentLoginController::class, 'logout'])
+        ->name('student.logout');
+});
+

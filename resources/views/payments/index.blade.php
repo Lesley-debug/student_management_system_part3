@@ -10,6 +10,10 @@
     @endif
 
     <!-- Add Payment Button -->
+    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary mb-3">
+        Back To Dashboard
+    </a>
+
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createPaymentModal">
         Add Payment
     </button>
@@ -37,41 +41,19 @@
                 <td>{{ $payment->payment_date }}</td>
                 <td>{{ $payment->method }}</td>
                 <td>
-                    <!-- View -->
-                    <button class="btn btn-sm btn-info"
-                        data-bs-toggle="modal"
-                        data-bs-target="#viewPaymentModal{{ $payment->id }}">
-                        View
-                    </button>
-
-                    <!-- Edit -->
-                    <button class="btn btn-sm btn-warning"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editPaymentModal{{ $payment->id }}">
-                        Edit
-                    </button>
-
-                    <!-- Delete -->
-                    <form action="{{ route('payments.destroy', $payment->id) }}" method="POST" style="display:inline;">
+                    <div class="d-flex flex-wrap gap-1">
+                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewPaymentModal{{ $payment->id }}">View</button>
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editPaymentModal{{ $payment->id }}">Edit</button>
+                        <form action="{{ route('payments.destroy', $payment->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            onclick="return confirm('Are you sure you want to delete this payment?')">
-                            Delete
-                        </button>
-                    </form>
-
-                    <!-- preview receipt-->
-                     <a href="{{route('payments.receipt.preview', $payment->id)}}" 
-                     class="btn btn-sm btn-info">
-                        Preview Receipt
-                    </a>
-
-                    <!-- Download Receipt -->
-                    <a href="{{ route('payments.receipt.download', $payment->id) }}" class="btn btn-sm btn-secondary">
-                        Download Receipt
-                    </a>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this payment?')">Delete</button>
+                        </form>
+                        <a href="{{ route('payments.receipt.preview', $payment->id) }}" class="btn btn-sm btn-primary">Preview</a>
+                        <a href="{{ route('payments.receipt.download', $payment->id) }}" class="btn btn-sm btn-success">Download</a>
+                    </div>
                 </td>
+
             </tr>
 
             <!-- View Modal -->
@@ -167,10 +149,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label>Receipt No</label>
-                        <input type="text" name="receipt_no" class="form-control" required>
-                    </div>
+                    
 
                     <div class="mb-3">
                         <label>Enrollment</label>

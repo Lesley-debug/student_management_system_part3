@@ -11,32 +11,37 @@ class Enrollment extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'enroll_no', 
-        'batch_id', 
-        'student_id', 
-        'join_date', 
-        'fee',
-    ];
+    'enroll_no',
+    'student_id',
+    'course_id',
+    'batch_id',
+    'join_date',
+    'fee'
+];
 
-    public $timestamps = true;
 
     protected $table = 'enrollments';
 
-    // Enrollment belongs to a student
+    public $timestamps = true;
+
     public function student()
     {
-        return $this->belongsTo(Student::class, 'student_id');
+        return $this->belongsTo(Student::class);
     }
 
-    // Enrollment belongs to a batch
     public function batch()
     {
-        return $this->belongsTo(Batch::class, 'batch_id');
+        return $this->belongsTo(Batch::class);
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
     // Enrollment has many payments
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'payment_id');
+        return $this->hasMany(Payment::class, 'enrollment_id');
     }
+
 }
